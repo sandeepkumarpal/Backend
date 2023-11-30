@@ -1,3 +1,3 @@
-# Backed series
+# Backend series
 
-This is my backed code for personal learning.
+This is my backend code for personal learning.
