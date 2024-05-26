@@ -22,7 +22,6 @@ const generateAccessandRefreshToken = async (userId) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password } = req.body;
-  console.log(email, username, password, fullName);
 
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -50,22 +49,22 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "error in uploading avatar");
   }
 
-  const user = User.create({
+  const user = await User.create({
     fullName,
-    avatar: avatar.url,
-    coverImage: coverImage?.url || "",
+    avatar: avatar,
+    coverImage: coverImage || "",
     email,
     password,
-    username: username.toLowerCase(),
+    userName: username.toLowerCase(),
   });
   // res.status(200).json({
   //   message: "RESPONSE AAA GYA BHAI",
   // });
 
   const createdUser = await User.findById(user._id).select(
-    "-password",
-    "-refreshToken"
+    "-password -refreshToken"
   );
+
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registring the user");
   }
