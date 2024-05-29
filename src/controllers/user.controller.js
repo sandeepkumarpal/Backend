@@ -86,13 +86,14 @@ const loginUser = asyncHandler(async (req, res) => {
   // Get data from req
 
   const { username, password, email } = req.body;
+
   // Get username or email
 
   if (!(username || email)) {
     throw new ApiError(400, "username or email is required");
   }
   // find the user
-  const user = User.findOne({
+  const user = await User.findOne({
     $or: [{ username }, { email }],
   });
   // check user
@@ -100,6 +101,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // check password
   const isPasswordValid = await user.isPasswordCorrect(password);
+
   if (!isPasswordValid) throw new ApiError(401, "Invalid credentials");
   // generate access and refresh token
   const { accessToken, refreshToken } = await generateAccessandRefreshToken(
@@ -133,11 +135,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1,
       },
     },
     {
