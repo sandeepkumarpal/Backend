@@ -22,6 +22,8 @@ const generateAccessandRefreshToken = async (userId) => {
   }
 };
 
+
+
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, username, password } = req.body;
 
@@ -422,6 +424,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
 })
 
 export {
+
   registerUser,
   loginUser,
   logoutUser,
